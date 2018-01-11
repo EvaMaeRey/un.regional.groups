@@ -90,6 +90,8 @@ if (!dir.exists("../product_data")) {
 }
 
 write_csv(df, "../product_data/un_regional_groups.csv")
+un_regional_groups = df
+save(un_regional_groups, file = "../product_data/un_regional_groups.Rdata")
 ```
 
 # session info
