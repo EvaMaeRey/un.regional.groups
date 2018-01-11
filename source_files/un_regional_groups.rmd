@@ -22,6 +22,7 @@ if (!file.exists("../raw_data/un_region_members_2017-12-30.html"))  {
 library(dplyr)
 library(stringr)
 library(tidyr)
+library(readr)
 country <- readLines("../raw_data/un_region_members_2017-12-30.html", 
                    encoding="UTF-8")
 
@@ -42,7 +43,7 @@ df %>% filter(str_detect(country, "\\*"))
 
 notes = data_frame(
   country = c("Kiribati", "Israel","Turkey", "United States of America"),
-  notes = c(
+  un_region_notes = c(
 "As of 2010, Kiribati (geographically in Oceania) is not a member of any regional group, despite other Oceania nations belonging to the Asian group. Despite its membership in the United Nations, Kiribati has never delegated a permanent representative to the UN.",
 "In May 2000 Israel became a WEOG full member, on a temporary basis (subject to renewal), in WEOG's headquarters in the US, thereby enabling it to put forward candidates for election to various UN General Assembly bodies. In 2004 Israel obtained a permanent renewal to its membership.",
 "Turkey, participates fully in both WEOG and Asian Group, but for electoral purposes is considered a member of WEOG only.",
@@ -55,5 +56,28 @@ df = df %>%
   filter(!(country == "Turkey" & un_regional_group == "Asia-Pacific Group")) %>% 
   full_join(notes)
 
+head(df)
+tail(df)
+
 ```
+
+
+# Save product
+```{r}
+if (!dir.exists("../product_data")) {
+  dir.create("../product_data")
+}
+
+write_csv(df, "../product_data/un_regional_groups.csv")
+```
+
+# session info
+
+```{r}
+sessionInfo()
+```
+
+
+
+
 
