@@ -22,7 +22,9 @@ if (!file.exists("../raw_data/un_region_members_2017-12-30.html"))  {
 library(dplyr)
 library(stringr)
 library(tidyr)
+library(countrycode)
 library(readr)
+library(readtext)
 country <- readLines("../raw_data/un_region_members_2017-12-30.html", 
                    encoding="UTF-8")
 
@@ -37,7 +39,26 @@ df = data_frame(country) %>%
   mutate(un_regional_group = 
            str_replace_all(un_regional_group, "\\<.+?\\>", "")) %>% 
   mutate(un_regional_group = str_trim(un_regional_group))%>% 
-  mutate(country = str_trim(country))
+  mutate(country = str_trim(country)) %>% 
+  mutate(country_name = countrycode(country, "country.name", "country.name"))
+
+df_fixes = df %>% filter(is.na(country_name))
+df_fixes
+  df_fixes = df_fixes %>% mutate(country = c("Central African Republic", "Democratic Republic of the Congo", 
+"United Republic of Tanzania", 
+"Democratic People's Republic of Korea", 
+"The former Yugoslav 
+ Republic of Macedonia")) %>% mutate(country_name = countrycode(country, "country.name", "country.name"))
+  df_fixes
+  
+df <- bind_rows(df %>% filter(!is.na(country_name)), 
+                df_fixes)
+  
+```
+
+
+
+```{r}
 
 df %>% filter(str_detect(country, "\\*"))
 
